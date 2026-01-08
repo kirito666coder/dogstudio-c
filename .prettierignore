@@ -1,0 +1,76 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Next.js
+.next
+out
+
+# Build outputs
+build
+dist
+.turbo
+
+# Environment files
+.env
+.env*.local
+
+# Testing
+coverage
+.nyc_output
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.min.js
+*.min.css
+*.map
+
+# Cache
+.cache
+.parcel-cache
+.eslintcache
+
+# Public assets (often generated or from CMS)
+public/uploads
+public/assets
+
+# Storybook
+storybook-static
+
+# Documentation builds
+.docusaurus
+docs/.vuepress/dist
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Prisma (if using)
+prisma/migrations
+
+# Contentlayer (if using)
+.contentlayer
