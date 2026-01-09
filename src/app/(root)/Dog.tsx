@@ -1,5 +1,6 @@
 "use client";
-import { OrbitControls } from "@react-three/drei";
+import * as THREE from "three";
+import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 
 export default function Dog() {
@@ -11,15 +12,31 @@ export default function Dog() {
 }
 
 const DogMesh = () => {
+  const model = useGLTF("/models/dog.drc.glb");
+
   useThree(({ camera, scene, gl }) => {
-    console.log(camera);
+    console.log(camera.position);
+    camera.position.z = 0.55;
   });
+
+  const texTure = useTexture({
+    normalMap: "/dog_normals.jpg",
+  });
+
+  texTure.normalMap.flipY = false;
+
+  model.scene.traverse(child => {
+    if (child.name.includes("DOG")) {
+      child.material = new THREE.MeshMatcapMaterial({
+        normalMap: texTure.normalMap,
+      });
+    }
+  });
+
   return (
     <>
-      <mesh>
-        <meshBasicMaterial color={0x00ff00} />
-        <boxGeometry args={[1, 1, 1]} />
-      </mesh>
+      <primitive object={model.scene} position={[0.25, -0.5, 0]} rotation={[0, Math.PI / 3.9, 0]} />
+      <directionalLight position={[0, 5, 5]} color={0xffffff} intensity={10} />
       <OrbitControls />
     </>
   );
