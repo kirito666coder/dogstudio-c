@@ -20,19 +20,24 @@ const DogMesh = () => {
     gl.outputColorSpace = THREE.SRGBColorSpace;
   });
 
-  const texTure = useTexture({
-    normalMap: "/dog_normals.jpg",
-    sampleMatCap: "/matcap/mat-2.png",
-  });
+  // const texTure = useTexture({
+  //   normalMap: "/dog_normals.jpg",
+  //   sampleMatCap: "/matcap/mat-2.png",
+  // });
 
-  texTure.normalMap.flipY = false;
-  texTure.sampleMatCap.colorSpace = THREE.SRGBColorSpace;
+  const [normalMap, sampleMatCap] = useTexture(["/dog_normals.jpg", "/matcap/mat-2.png"]).map(
+    texture => {
+      texture.flipY = false;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    }
+  );
 
   model.scene.traverse(child => {
     if (child.name.includes("DOG")) {
       child.material = new THREE.MeshMatcapMaterial({
-        normalMap: texTure.normalMap,
-        matcap: texTure.sampleMatCap,
+        normalMap,
+        matcap: sampleMatCap,
       });
     }
   });
