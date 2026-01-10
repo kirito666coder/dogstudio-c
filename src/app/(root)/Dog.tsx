@@ -15,20 +15,24 @@ const DogMesh = () => {
   const model = useGLTF("/models/dog.drc.glb");
 
   useThree(({ camera, scene, gl }) => {
-    console.log(camera.position);
     camera.position.z = 0.55;
+    gl.toneMapping = THREE.ReinhardToneMapping;
+    gl.outputColorSpace = THREE.SRGBColorSpace;
   });
 
   const texTure = useTexture({
     normalMap: "/dog_normals.jpg",
+    sampleMatCap: "/matcap/mat-2.png",
   });
 
   texTure.normalMap.flipY = false;
+  texTure.sampleMatCap.colorSpace = THREE.SRGBColorSpace;
 
   model.scene.traverse(child => {
     if (child.name.includes("DOG")) {
       child.material = new THREE.MeshMatcapMaterial({
         normalMap: texTure.normalMap,
+        matcap: texTure.sampleMatCap,
       });
     }
   });
