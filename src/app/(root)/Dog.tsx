@@ -1,7 +1,8 @@
 "use client";
 import * as THREE from "three";
-import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
+import { OrbitControls, useAnimations, useGLTF, useTexture } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
+import { useEffect } from "react";
 
 export default function Dog() {
   return (
@@ -20,6 +21,13 @@ const DogMesh = () => {
     gl.outputColorSpace = THREE.SRGBColorSpace;
   });
 
+  const {actions} = useAnimations(model.animations,model.scene)
+
+  useEffect(() => {
+  actions["Take 001"].play()
+  }, [actions]);
+  
+
   // const texTure = useTexture({
   //   normalMap: "/dog_normals.jpg",
   //   sampleMatCap: "/matcap/mat-2.png",
@@ -33,12 +41,14 @@ const DogMesh = () => {
     }
   );
 
-  model.scene.traverse(child => {
-    if (child.name.includes("DOG")) {
-      child.material = new THREE.MeshMatcapMaterial({
+  const dogMaterial = new THREE.MeshMatcapMaterial({
         normalMap,
         matcap: sampleMatCap,
       });
+
+  model.scene.traverse(child => {
+    if (child.name.includes("DOG")) {
+      child.material = dogMaterial
     }
   });
 
