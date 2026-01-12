@@ -21,12 +21,12 @@ const DogMesh = () => {
     gl.outputColorSpace = THREE.SRGBColorSpace;
   });
 
-  const {actions} = useAnimations(model.animations,model.scene)
+  const { actions } = useAnimations(model.animations, model.scene);
 
   useEffect(() => {
-  actions["Take 001"].play()
+    if (!actions) return;
+    actions["Take 001"].play();
   }, [actions]);
-  
 
   // const texTure = useTexture({
   //   normalMap: "/dog_normals.jpg",
@@ -41,14 +41,29 @@ const DogMesh = () => {
     }
   );
 
+  const [branchMap, branchNormalMap] = useTexture([
+    "/branches_diffuse.jpeg",
+    "branches_normals.jpeg",
+  ]).map(texture => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  });
+
   const dogMaterial = new THREE.MeshMatcapMaterial({
-        normalMap,
-        matcap: sampleMatCap,
-      });
+    normalMap,
+    matcap: sampleMatCap,
+  });
+
+  const branchMaterial = new THREE.MeshMatcapMaterial({
+    normalMap: branchNormalMap,
+    map: branchMap,
+  });
 
   model.scene.traverse(child => {
     if (child.name.includes("DOG")) {
-      child.material = dogMaterial
+      child.material = dogMaterial;
+    } else {
+      child.material = branchMaterial;
     }
   });
 
