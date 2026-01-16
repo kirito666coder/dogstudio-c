@@ -6,7 +6,19 @@ import { useEffect } from "react";
 
 export default function Dog() {
   return (
-    <Canvas>
+    <Canvas
+      style={{
+        height: "100vh",
+        width: "100vw",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        zIndex: 1,
+        backgroundImage: "url(/background-l.png)",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
       <DogMesh />
     </Canvas>
   );
@@ -71,7 +83,7 @@ const DogMesh = () => {
     <>
       <primitive object={model.scene} position={[0.25, -0.5, 0]} rotation={[0, Math.PI / 3.9, 0]} />
       <directionalLight position={[0, 5, 5]} color={0xffffff} intensity={10} />
-      <OrbitControls />
+      {/* <OrbitControls /> */}
     </>
   );
 };
