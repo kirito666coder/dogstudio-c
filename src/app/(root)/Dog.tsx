@@ -2,7 +2,9 @@
 import * as THREE from "three";
 import { OrbitControls, useAnimations, useGLTF, useTexture } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "@/libs/gsap";
 
 export default function Dog() {
   return (
@@ -77,6 +79,45 @@ const DogMesh = () => {
     } else {
       child.material = branchMaterial;
     }
+  });
+
+  const DogModel = useRef(model);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#section-1",
+        endTrigger: "#section-3",
+        start: "top top",
+        end: "bottom bottom",
+        markers: true,
+        scrub: true,
+      },
+    });
+
+    tl.to(DogModel.current.scene.position, {
+      z: "-=0.75",
+      y: "+=0.1",
+    })
+      .to(DogModel.current.scene.rotation, {
+        x: `+=${Math.PI / 15}`,
+      })
+      .to(
+        DogModel.current.scene.rotation,
+        {
+          y: `-=${Math.PI}`,
+        },
+        "third"
+      )
+      .to(
+        DogModel.current.scene.position,
+        {
+          x: "-=0.4",
+          z: "+=0.5",
+          y: "-=0.05",
+        },
+        "third"
+      );
   });
 
   return (
