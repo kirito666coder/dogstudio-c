@@ -1,7 +1,7 @@
 export default function NavBar() {
   return (
-    <nav className="md:mt-15 mt-5 mx-10">
-      <div className="nav-elem">
+    <nav className="md:mt-15 mt-5 mx-10 nav-bar relative z-10">
+      <div className="nav-elem cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 401.23099 116.838">
           <path d="M97.9212,84.4793c0-13.21301-7.2132-23.3924-25.54961-23.3924h-19.6172v46.7851h19.6172c18.3364,0,25.54961-10.1797,25.54961-23.3927Zm-13.3478,0c0,9.2356-5.1908,12.6737-12.404,12.6737h-6.6739v-25.3474h6.6739c7.2132,0,12.404,3.4381,12.404,12.6737Z" />
           <path d="M100.972,107.872h37.078v-10.6516h-24.33701v-8.0222h21.37v-10.112h-21.37v-7.348h23.73v-10.6513h-36.47099v46.7851Z" />
@@ -20,11 +20,11 @@ export default function NavBar() {
           <path d="M30.4351,61.1758h-10.4155L0,116.838H10.3479L30.4351,61.1758Z" />
         </svg>
       </div>
-      <div className="nev-elem mr-7 md:mr-48 flex items-center gap-2">
+      <div className="nev-elem mr-7 md:mr-48 flex items-center gap-2 cursor-pointer">
         <i className="ri-arrow-right-s-line text-red-500" />
         <p className="text-xs font-bold">Our Showreel</p>
       </div>
-      <div className="nev-elem text-2xl font-light">
+      <div className="nev-elem text-2xl font-light cursor-pointer">
         <i className="ri-menu-3-line" />
       </div>
     </nav>

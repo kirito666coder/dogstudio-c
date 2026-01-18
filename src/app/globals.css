@@ -31,8 +31,7 @@ section{
   z-index: 2;
 }
 
-#section-1{
-  nav{
+.nav-bar{
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,5 +43,4 @@ section{
         height: 100%;
       }
     }
-  }
 }
