@@ -19,6 +19,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "remixicon": "^4.8.0",
     "three": "^0.182.0"
   },
   "devDependencies": {
