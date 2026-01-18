@@ -1,6 +1,6 @@
 "use client";
 import * as THREE from "three";
-import { OrbitControls, useAnimations, useGLTF, useTexture } from "@react-three/drei";
+import { useAnimations, useGLTF, useTexture } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
@@ -95,13 +95,21 @@ const DogMesh = () => {
       },
     });
 
-    tl.to(DogModel.current.scene.position, {
-      z: "-=0.75",
-      y: "+=0.1",
-    })
-      .to(DogModel.current.scene.rotation, {
-        x: `+=${Math.PI / 15}`,
-      })
+    tl.to(
+      DogModel.current.scene.position,
+      {
+        z: "-=0.75",
+        y: "+=0.1",
+      },
+      "first"
+    )
+      .to(
+        DogModel.current.scene.rotation,
+        {
+          x: `+=${Math.PI / 15}`,
+        },
+        "first"
+      )
       .to(
         DogModel.current.scene.rotation,
         {
@@ -122,9 +130,8 @@ const DogMesh = () => {
 
   return (
     <>
-      <primitive object={model.scene} position={[0.25, -0.5, 0]} rotation={[0, Math.PI / 3.9, 0]} />
+      <primitive object={model.scene} position={[0.2, -0.6, 0.1]} rotation={[0, Math.PI / 5, -0]} />
       <directionalLight position={[0, 5, 5]} color={0xffffff} intensity={10} />
-      {/* <OrbitControls /> */}
     </>
   );
 };
