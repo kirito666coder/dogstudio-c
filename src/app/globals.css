@@ -44,3 +44,65 @@ section{
       }
     }
 }
+
+
+#section-2 {
+  .titles {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10rem;
+    margin-block: 10rem;
+
+    .title {
+      display: flex;
+      gap: 4rem;
+      opacity: 0.3;
+      padding-block: 2rem;
+      transition: all 0.3s linear;
+      cursor: pointer;
+
+      h1 {
+        font-size: 4.5rem;
+        font-weight: 100;
+        line-height: 1;
+      }
+
+      small {
+        margin-top: 0.6rem;
+        font-size: 0.5rem;
+      }
+
+    }
+
+    .title:hover {
+      opacity: 1;
+    }
+
+
+
+  }
+}
+
+main:has(#section-2 .title:hover) #canvas-elem::after {
+  opacity: 0;
+}
+
+.images {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: all 0.3s linear;
+  }
+
+}
