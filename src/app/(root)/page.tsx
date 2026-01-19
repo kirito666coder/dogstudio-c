@@ -1,6 +1,7 @@
 import NavBar from "@/components/NavBar";
 import Dog from "./Dog";
 import HeroSection from "./HeroSection";
+import ProjectSection from "./ProjectSection";
 
 export default function Home() {
   return (
@@ -9,7 +10,7 @@ export default function Home() {
         <Dog />
         <NavBar />
         <HeroSection />
-        <section id="section-2" />
+        <ProjectSection />
         <section id="section-3" />
       </main>
     </>
