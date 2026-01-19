@@ -9,6 +9,7 @@ import { gsap } from "@/libs/gsap";
 export default function Dog() {
   return (
     <Canvas
+      id="canvas-elem"
       style={{
         height: "100vh",
         width: "100vw",
@@ -16,9 +17,6 @@ export default function Dog() {
         top: 0,
         left: 0,
         zIndex: 1,
-        backgroundImage: "url(/background-l.png)",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
       }}
     >
       <DogMesh />
