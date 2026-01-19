@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section id="section-1" className="mx-10 mt-20 md:mt-36 ">
+    <section id="section-1" className="px-10 mt-20 md:mt-36 overflow-hidden ">
       <div className="md:flex">
         <div className=" md:text-right md:w-1/2">
           <h1 className="text-7xl md:text-9xl font-bold leading-16 md:leading-28">
@@ -32,6 +32,8 @@ export default function HeroSection() {
           </ul>
         </div>
       </div>
+      <div className="absolute bg-red-600 h-px w-30 top-30 left-[80vw] md:left-[70vw] md:w-50 -rotate-45" />
+      <div className="absolute hidden md:block bg-red-600 h-px w-160 top-90  md:left-[5vw] rotate-45" />
     </section>
   );
 }
