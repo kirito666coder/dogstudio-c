@@ -18,6 +18,11 @@ export default function Dog() {
         left: 0,
         zIndex: 1,
       }}
+      gl={{
+        antialias: true,
+        toneMapping: THREE.NoToneMapping,
+        toneMappingExposure: 1.0,
+      }}
     >
       <DogMesh />
     </Canvas>
@@ -29,7 +34,8 @@ const DogMesh = () => {
 
   useThree(({ camera, gl }) => {
     camera.position.z = 0.55;
-    gl.toneMapping = THREE.ReinhardToneMapping;
+    gl.toneMapping = THREE.NoToneMapping;
+    gl.toneMappingExposure = 1.0;
     gl.outputColorSpace = THREE.SRGBColorSpace;
   });
 
@@ -42,18 +48,21 @@ const DogMesh = () => {
   const [normalMap] = useTexture(["/dog_normals.jpg"]).map(texture => {
     texture.flipY = false;
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 16;
     return texture;
   });
 
   const [branchMap, branchNormalMap] = useTexture([
     "/branches_diffuse.jpeg",
-    "branches_normals.jpeg",
+    "/branches_normals.jpeg",
   ]).map(texture => {
+    texture.flipY = false;
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 16;
     return texture;
   });
 
-  const [mat2, mat8, mat9, mat10, mat12, mat13, mat19] = useTexture([
+  const matcapTextures = useTexture([
     "/matcap/mat-1.png",
     "/matcap/mat-2.png",
     "/matcap/mat-3.png",
@@ -76,8 +85,17 @@ const DogMesh = () => {
     "/matcap/mat-20.png",
   ]).map(texture => {
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 16;
     return texture;
   });
+
+  const mat2 = matcapTextures[1];
+  const mat8 = matcapTextures[7];
+  const mat9 = matcapTextures[8];
+  const mat10 = matcapTextures[9];
+  const mat12 = matcapTextures[11];
+  const mat13 = matcapTextures[12];
+  const mat19 = matcapTextures[18];
 
   const material = useRef({
     uMatcap1: { value: mat19 },
@@ -85,14 +103,19 @@ const DogMesh = () => {
     uProgress: { value: 1.0 },
   });
 
+  const shaderUniforms = useRef<{ [uniform: string]: THREE.IUniform<any> } | null>(null);
+
   const dogMaterial = new THREE.MeshMatcapMaterial({
     normalMap,
     matcap: mat2,
+    normalScale: new THREE.Vector2(2.5, 2.5), // Increased normal map intensity for more detail
+    flatShading: false,
   });
 
   const branchMaterial = new THREE.MeshMatcapMaterial({
     normalMap: branchNormalMap,
     map: branchMap,
+    normalScale: new THREE.Vector2(1.5, 1.5),
   });
 
   const onBeforeCompile: THREE.MeshMatcapMaterial["onBeforeCompile"] = shader => {
@@ -100,7 +123,7 @@ const DogMesh = () => {
     shader.uniforms.uMatcapTexture2 = material.current.uMatcap2;
     shader.uniforms.uProgress = material.current.uProgress;
 
-    // Store reference to shader uniforms for GSAP animation
+    shaderUniforms.current = shader.uniforms;
 
     shader.fragmentShader = shader.fragmentShader.replace(
       "void main() {",
@@ -116,25 +139,32 @@ const DogMesh = () => {
     shader.fragmentShader = shader.fragmentShader.replace(
       "vec4 matcapColor = texture2D( matcap, uv );",
       `
-          vec4 matcapColor1 = texture2D( uMatcapTexture1, uv );
-          vec4 matcapColor2 = texture2D( uMatcapTexture2, uv );
-          float transitionFactor  = 0.2;
+          vec4 matcapColor1 = texture2D(uMatcapTexture1, uv);
+          vec4 matcapColor2 = texture2D(uMatcapTexture2, uv);
+          float transitionFactor = 0.2;
           
-          float progress = smoothstep(uProgress - transitionFactor,uProgress, (vViewPosition.x+vViewPosition.y)*0.5 + 0.5);
+          float progress = smoothstep(uProgress - transitionFactor, uProgress, (vViewPosition.x + vViewPosition.y) * 0.5 + 0.5);
 
-          vec4 matcapColor = mix(matcapColor2, matcapColor1, progress );
+          vec4 matcapColor = mix(matcapColor2, matcapColor1, progress);
         `
     );
   };
 
   dogMaterial.onBeforeCompile = onBeforeCompile;
+  dogMaterial.needsUpdate = true;
 
   model.scene.traverse(child => {
     if (child instanceof THREE.Mesh) {
       if (child.name.includes("DOG")) {
         child.material = dogMaterial;
+        child.material.needsUpdate = true;
+        child.castShadow = true;
+        child.receiveShadow = true;
       } else {
         child.material = branchMaterial;
+        child.material.needsUpdate = true;
+        child.castShadow = true;
+        child.receiveShadow = true;
       }
     }
   });
@@ -178,106 +208,48 @@ const DogMesh = () => {
   }, []);
 
   useEffect(() => {
+    const changeMatcap = (newMatcap: THREE.Texture) => {
+      material.current.uMatcap1.value = newMatcap;
+      gsap.to(material.current.uProgress, {
+        value: 0.0,
+        duration: 0.3,
+        onComplete: () => {
+          material.current.uMatcap2.value = material.current.uMatcap1.value;
+          material.current.uProgress.value = 1.0;
+        },
+      });
+    };
+
     document
       .querySelector(`.title[img-title="tomorrowland"]`)
-      ?.addEventListener("mouseenter", () => {
-        material.current.uMatcap1.value = mat19;
-        gsap.to(material.current.uProgress, {
-          value: 0.0,
-          duration: 0.3,
-          onComplete: () => {
-            material.current.uMatcap2.value = material.current.uMatcap1.value;
-            material.current.uProgress.value = 1.0;
-          },
-        });
-      });
-    document.querySelector(`.title[img-title="navy-pier"]`)?.addEventListener("mouseenter", () => {
-      material.current.uMatcap1.value = mat8;
+      ?.addEventListener("mouseenter", () => changeMatcap(mat19));
 
-      gsap.to(material.current.uProgress, {
-        value: 0.0,
-        duration: 0.3,
-        onComplete: () => {
-          material.current.uMatcap2.value = material.current.uMatcap1.value;
-          material.current.uProgress.value = 1.0;
-        },
-      });
-    });
+    document
+      .querySelector(`.title[img-title="navy-pier"]`)
+      ?.addEventListener("mouseenter", () => changeMatcap(mat8));
+
     document
       .querySelector(`.title[img-title="msi-chicago"]`)
-      ?.addEventListener("mouseenter", () => {
-        material.current.uMatcap1.value = mat9;
+      ?.addEventListener("mouseenter", () => changeMatcap(mat9));
 
-        gsap.to(material.current.uProgress, {
-          value: 0.0,
-          duration: 0.3,
-          onComplete: () => {
-            material.current.uMatcap2.value = material.current.uMatcap1.value;
-            material.current.uProgress.value = 1.0;
-          },
-        });
-      });
-    document.querySelector(`.title[img-title="phone"]`)?.addEventListener("mouseenter", () => {
-      material.current.uMatcap1.value = mat12;
+    document
+      .querySelector(`.title[img-title="phone"]`)
+      ?.addEventListener("mouseenter", () => changeMatcap(mat12));
 
-      gsap.to(material.current.uProgress, {
-        value: 0.0,
-        duration: 0.3,
-        onComplete: () => {
-          material.current.uMatcap2.value = material.current.uMatcap1.value;
-          material.current.uProgress.value = 1.0;
-        },
-      });
-    });
-    document.querySelector(`.title[img-title="kikk"]`)?.addEventListener("mouseenter", () => {
-      material.current.uMatcap1.value = mat10;
+    document
+      .querySelector(`.title[img-title="kikk"]`)
+      ?.addEventListener("mouseenter", () => changeMatcap(mat10));
 
-      gsap.to(material.current.uProgress, {
-        value: 0.0,
-        duration: 0.3,
-        onComplete: () => {
-          material.current.uMatcap2.value = material.current.uMatcap1.value;
-          material.current.uProgress.value = 1.0;
-        },
-      });
-    });
-    document.querySelector(`.title[img-title="kennedy"]`)?.addEventListener("mouseenter", () => {
-      material.current.uMatcap1.value = mat8;
+    document
+      .querySelector(`.title[img-title="kennedy"]`)
+      ?.addEventListener("mouseenter", () => changeMatcap(mat8));
 
-      gsap.to(material.current.uProgress, {
-        value: 0.0,
-        duration: 0.3,
-        onComplete: () => {
-          material.current.uMatcap2.value = material.current.uMatcap1.value;
-          material.current.uProgress.value = 1.0;
-        },
-      });
-    });
-    document.querySelector(`.title[img-title="opera"]`)?.addEventListener("mouseenter", () => {
-      material.current.uMatcap1.value = mat13;
+    document
+      .querySelector(`.title[img-title="opera"]`)
+      ?.addEventListener("mouseenter", () => changeMatcap(mat13));
 
-      gsap.to(material.current.uProgress, {
-        value: 0.0,
-        duration: 0.3,
-        onComplete: () => {
-          material.current.uMatcap2.value = material.current.uMatcap1.value;
-          material.current.uProgress.value = 1.0;
-        },
-      });
-    });
-    document.querySelector(`.titles`)?.addEventListener("mouseleave", () => {
-      material.current.uMatcap1.value = mat2;
-
-      gsap.to(material.current.uProgress, {
-        value: 0.0,
-        duration: 0.3,
-        onComplete: () => {
-          material.current.uMatcap2.value = material.current.uMatcap1.value;
-          material.current.uProgress.value = 1.0;
-        },
-      });
-    });
-  }, []);
+    document.querySelector(`.titles`)?.addEventListener("mouseleave", () => changeMatcap(mat2));
+  }, [mat2, mat8, mat9, mat10, mat12, mat13, mat19]);
 
   return (
     <>
@@ -286,7 +258,9 @@ const DogMesh = () => {
         position={[0.25, -0.55, 0]}
         rotation={[0, Math.PI / 3.9, 0]}
       />
-      <directionalLight position={[0, 5, 5]} color={0xffffff} intensity={10} />
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[0, 5, 5]} color={0xffffff} intensity={8} castShadow />
+      <directionalLight position={[-3, 2, -3]} color={0xffffff} intensity={2} />
     </>
   );
 };
