@@ -47,7 +47,7 @@ const DogMesh = () => {
 
   const [normalMap] = useTexture(["/dog_normals.jpg"]).map(texture => {
     texture.flipY = false;
-    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.colorSpace = THREE.LinearSRGBColorSpace;
     texture.anisotropy = 16;
     return texture;
   });
@@ -55,9 +55,10 @@ const DogMesh = () => {
   const [branchMap, branchNormalMap] = useTexture([
     "/branches_diffuse.jpeg",
     "/branches_normals.jpeg",
-  ]).map(texture => {
+  ]).map((texture, index) => {
     texture.flipY = false;
-    texture.colorSpace = THREE.SRGBColorSpace;
+    // Only the normal map (index 1) should use LinearSRGB
+    texture.colorSpace = index === 1 ? THREE.LinearSRGBColorSpace : THREE.SRGBColorSpace;
     texture.anisotropy = 16;
     return texture;
   });

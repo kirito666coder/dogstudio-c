@@ -1,0 +1,32 @@
+export default function FooterSection() {
+  return (
+    <div className="min-h-screen">
+      <div className="md:flex">
+        <div className="  px-4 md:px-70 md:w-1/2">
+          <h5 className="text-xs font-extrabold opacity-50">THIS IS HOW WE DO IT</h5>
+          <p className="text-4xl md:text-5xl font-extrabold text-center md:text-start md:w-100">
+            We&apos;re crafting emotional experiences aimed at improving results
+          </p>
+        </div>
+        <div className="relative z-2 px-4 md:mr-10 mt-10 md:mt-30 pt-10 bg-gradient-to-b from-transparent to-black md:from-transparent md:to-transparent">
+          <div className="flex flex-col md:flex-row text-sm opacity-50 font-bold gap-5 md:gap-20">
+            <p className="md:w-60">
+              Dogstudio is a design & technology firm working globally from our offices based in
+              Belgium and Chicago. <br /> Our strong focus on producing high quality & emotional
+              brandings, digital products and experiences became a signature.
+            </p>
+            <p className="md:w-60">
+              We’re passionate about moving people and solving problems for the likes of Microsoft,
+              The Museum of Science And Industry Of Chicago, The Kennedy Center of Washington,
+              Dragone, Quanta Magazine, and many more.
+            </p>
+          </div>
+          <h5 className="border-b-2 border-red-500 w-fit py-2 font-bold mt-5">
+            Discover our values
+          </h5>
+        </div>
+      </div>
+      <div className="relative z-2 bg-gradient-to-b from-transparent to-black w-full h-150" />
+    </div>
+  );
+}

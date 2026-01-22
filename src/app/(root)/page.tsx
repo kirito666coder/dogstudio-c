@@ -3,6 +3,7 @@ import Dog from "./Dog";
 import HeroSection from "./HeroSection";
 import ProjectSection from "./ProjectSection";
 import BackGroundImages from "./BackGroundImages";
+import FooterSection from "./FooterSection";
 
 export default function Home() {
   return (
@@ -13,7 +14,7 @@ export default function Home() {
         <NavBar />
         <HeroSection />
         <ProjectSection />
-        <section id="section-3" />
+        <FooterSection />
       </main>
     </>
   );
