@@ -8,7 +8,7 @@ export default function FooterSection() {
             We&apos;re crafting emotional experiences aimed at improving results
           </p>
         </div>
-        <div className="relative z-2 px-4 md:mr-10 mt-10 md:mt-30 pt-10 bg-gradient-to-b from-transparent to-black md:from-transparent md:to-transparent">
+        <div className="relative z-2 px-4 md:mr-10 mt-10 md:mt-60 pt-10 bg-gradient-to-b from-transparent to-black md:from-transparent md:to-transparent">
           <div className="flex flex-col md:flex-row text-sm opacity-50 font-bold gap-5 md:gap-20">
             <p className="md:w-60">
               Dogstudio is a design & technology firm working globally from our offices based in
@@ -26,7 +26,19 @@ export default function FooterSection() {
           </h5>
         </div>
       </div>
-      <div className="relative z-2 bg-gradient-to-b from-transparent to-black w-full h-150" />
+      <div className=" relative z-2 bg-gradient-to-b from-transparent via-black/70 to-black w-full h-150 ">
+        <div className="flex w-full h-full items-end pb-15">
+          <div className=" w-full h-50 text-2xl px-4 flex flex-col md:flex-row gap-4 md:items-end md:justify-end md:gap-35">
+            <p>Chicago .</p>
+            <p>Amsterdam .</p>
+            <p>Paris .</p>
+          </div>
+          <div className=" w-[80%] h-50 flex flex-col items-end md:pr-45 pr-4" >
+            <h3 className="text-2xl font-extrabold text-end">We <br />Make <br />Good <br />Shit </h3>
+            <h4 className="text-sm mt-2 md:mt-9">Fb / Ins / Dr / Tw</h4>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
