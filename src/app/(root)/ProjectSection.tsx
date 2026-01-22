@@ -31,6 +31,7 @@ export default function ProjectSection() {
           <h1>Royal Opera Of Wallonia</h1>
         </div>
       </div>
+      <div className="absolute bg-red-600 h-px w-390 top-280 md:top-240 left-[10vw] md:left-[70vw] md:w-200 -rotate-45" />
     </section>
   );
 }

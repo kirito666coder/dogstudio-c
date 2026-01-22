@@ -1,6 +1,6 @@
 export default function FooterSection() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen mt-30">
       <div className="md:flex">
         <div className="  px-4 md:px-70 md:w-1/2">
           <h5 className="text-xs font-extrabold opacity-50">THIS IS HOW WE DO IT</h5>
@@ -24,6 +24,7 @@ export default function FooterSection() {
           <h5 className="border-b-2 border-red-500 w-fit py-2 font-bold mt-5">
             Discover our values
           </h5>
+          <div className="absolute bg-red-600 h-px w-70 top-39 md:top-90 right-[25vw] md:right-[50vw] md:w-90 rotate-45" />
         </div>
       </div>
       <div className=" relative z-2 bg-gradient-to-b from-transparent via-black/70 to-black w-full h-150 ">
@@ -33,8 +34,13 @@ export default function FooterSection() {
             <p>Amsterdam .</p>
             <p>Paris .</p>
           </div>
-          <div className=" w-[80%] h-50 flex flex-col items-end md:pr-45 pr-4" >
-            <h3 className="text-2xl font-extrabold text-end">We <br />Make <br />Good <br />Shit </h3>
+          <div className=" w-[80%] h-50 flex flex-col items-end md:pr-45 pr-4">
+            <h3 className="text-2xl font-extrabold text-end">
+              We <br />
+              Make <br />
+              Good <br />
+              Shit{" "}
+            </h3>
             <h4 className="text-sm mt-2 md:mt-9">Fb / Ins / Dr / Tw</h4>
           </div>
         </div>
